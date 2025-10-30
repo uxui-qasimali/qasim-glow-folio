@@ -27,7 +27,17 @@ const Navbar = () => {
       className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
     >
       <div className="max-w-7xl mx-auto px-6 py-6">
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-between">
+          {/* Logo/Name - Left */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2 }}
+            className="text-2xl font-bold text-accent cursor-hover"
+          >
+            Qasim A.
+          </motion.div>
+
           {/* Navigation Links - Centered */}
           <div className={`hidden md:flex items-center gap-8 px-10 py-4 rounded-full border transition-all duration-500 ${
             isScrolled

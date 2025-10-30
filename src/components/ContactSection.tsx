@@ -1,12 +1,31 @@
 import { motion, useInView } from 'framer-motion';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { Mail, Linkedin, Instagram, Facebook } from 'lucide-react';
 import profileAbout from '@/assets/profile-about.jpg';
+import VanillaTilt from 'vanilla-tilt';
 
 const ContactSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
   const [hoveredCard, setHoveredCard] = useState(false);
+  const contactCardRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (contactCardRef.current) {
+      VanillaTilt.init(contactCardRef.current, {
+        max: 10,
+        speed: 400,
+        glare: true,
+        'max-glare': 0.25,
+      });
+    }
+
+    return () => {
+      if (contactCardRef.current && (contactCardRef.current as any).vanillaTilt) {
+        (contactCardRef.current as any).vanillaTilt.destroy();
+      }
+    };
+  }, [isInView]);
 
   const socialLinks = [
     { icon: Linkedin, url: '#', label: 'LinkedIn' },
@@ -51,6 +70,7 @@ const ContactSection = () => {
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Contact Card */}
           <motion.div
+            ref={contactCardRef}
             initial={{ opacity: 0, x: -100 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8 }}

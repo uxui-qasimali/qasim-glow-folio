@@ -1,6 +1,7 @@
 import { motion, useInView } from 'framer-motion';
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import profileAbout from '@/assets/profile-about.jpg';
+import VanillaTilt from 'vanilla-tilt';
 
 const skills = [
   { name: 'Figma', icon: '🎨' },
@@ -14,6 +15,28 @@ const skills = [
 const AboutSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
+  const skillCardsRef = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    skillCardsRef.current.forEach((card) => {
+      if (card) {
+        VanillaTilt.init(card, {
+          max: 15,
+          speed: 400,
+          glare: true,
+          'max-glare': 0.3,
+        });
+      }
+    });
+
+    return () => {
+      skillCardsRef.current.forEach((card) => {
+        if (card && (card as any).vanillaTilt) {
+          (card as any).vanillaTilt.destroy();
+        }
+      });
+    };
+  }, [isInView]);
 
   return (
     <section id="about" ref={ref} className="min-h-screen py-20 px-6">
@@ -78,14 +101,10 @@ const AboutSection = () => {
                 {skills.map((skill, index) => (
                   <motion.div
                     key={skill.name}
+                    ref={(el) => (skillCardsRef.current[index] = el)}
                     initial={{ opacity: 0, y: 20 }}
                     animate={isInView ? { opacity: 1, y: 0 } : {}}
                     transition={{ duration: 0.5, delay: 0.8 + index * 0.1 }}
-                    whileHover={{ 
-                      scale: 1.1, 
-                      rotateY: 10,
-                      rotateX: 10,
-                    }}
                     className="bg-secondary/50 backdrop-blur-sm p-4 rounded-xl border border-border cursor-hover shine-effect group hover:border-accent transition-all duration-300"
                   >
                     <div className="text-3xl mb-2">{skill.icon}</div>

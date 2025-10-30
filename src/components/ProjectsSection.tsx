@@ -1,6 +1,7 @@
 import { motion, useInView } from 'framer-motion';
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import { ExternalLink } from 'lucide-react';
+import VanillaTilt from 'vanilla-tilt';
 
 const projects = [
   {
@@ -38,6 +39,28 @@ const projects = [
 const ProjectsSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
+  const projectCardsRef = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    projectCardsRef.current.forEach((card) => {
+      if (card) {
+        VanillaTilt.init(card, {
+          max: 10,
+          speed: 400,
+          glare: true,
+          'max-glare': 0.2,
+        });
+      }
+    });
+
+    return () => {
+      projectCardsRef.current.forEach((card) => {
+        if (card && (card as any).vanillaTilt) {
+          (card as any).vanillaTilt.destroy();
+        }
+      });
+    };
+  }, [isInView]);
 
   return (
     <section id="projects" ref={ref} className="min-h-screen py-20 px-6">
@@ -62,14 +85,10 @@ const ProjectsSection = () => {
           {projects.map((project, index) => (
             <motion.div
               key={project.title}
+              ref={(el) => (projectCardsRef.current[index] = el)}
               initial={{ opacity: 0, y: 50 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.4 + index * 0.1 }}
-              whileHover={{
-                y: -10,
-                rotateX: 5,
-                rotateY: 5,
-              }}
               className="group relative bg-secondary/30 backdrop-blur-sm rounded-2xl overflow-hidden border border-border cursor-hover shine-effect hover:border-accent transition-all duration-500"
             >
               {/* Project Image */}
