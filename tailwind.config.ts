@@ -64,8 +64,12 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        poppins: ['Poppins', 'sans-serif'],
-        inter: ['Inter', 'sans-serif'],
+        sans: ["Space Grotesk", "sans-serif"],
+        grotesk: ["Space Grotesk", "sans-serif"],
+        mono: ["Space Mono", "monospace"],
+        satoshi: ["Satoshi", "sans-serif"],
+        general: ["General Sans", "sans-serif"],
+        inter: ["Inter", "sans-serif"],
       },
       keyframes: {
         "accordion-down": {

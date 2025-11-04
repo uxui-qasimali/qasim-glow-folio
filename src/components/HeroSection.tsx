@@ -2,108 +2,196 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import profileHero from '@/assets/profile-hero.jpg';
+import { Button } from './ui/button';
 
 const HeroSection = () => {
   const [showBackground, setShowBackground] = useState(false);
 
   return (
-    <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Animated Background Image */}
+    <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden noise-texture">
+      {/* Base Background */}
+      <div className="absolute inset-0 bg-[hsl(var(--bg-1))] z-0" />
+      
+      {/* Radial Lime Glow */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1.2, repeat: Infinity, repeatType: 'reverse' }}
+        className="absolute top-1/4 right-1/4 w-[600px] h-[600px] rounded-full z-0"
+        style={{
+          background: 'radial-gradient(circle, hsl(var(--lime) / 0.08) 0%, transparent 70%)',
+          filter: 'blur(80px)',
+        }}
+      />
+
+      {/* Faint Background Text */}
+      <div className="absolute inset-0 flex items-center justify-center z-0 overflow-hidden">
+        <div 
+          className="text-[20vw] font-bold text-[hsl(var(--text)/0.02)] select-none pointer-events-none"
+          style={{ fontFamily: 'Satoshi, sans-serif' }}
+        >
+          UX/UI DESIGNER
+        </div>
+      </div>
+
+      {/* Portrait Image Reveal Layer */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: showBackground ? 0.35 : 0 }}
         transition={{ duration: 0.8 }}
-        className="absolute inset-0 z-0"
+        className="absolute inset-0 z-[1]"
         style={{
           backgroundImage: `url(${profileHero})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          filter: showBackground ? 'blur(5px)' : 'blur(0px)',
+          filter: showBackground ? 'blur(6px)' : 'blur(20px)',
+          transform: showBackground ? 'scale(1.02)' : 'scale(1)',
         }}
       />
+      
+      {/* Dark overlay when image is visible */}
+      {showBackground && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.12 }}
+          transition={{ duration: 0.8 }}
+          className="absolute inset-0 bg-black z-[2]"
+        />
+      )}
 
-      {/* Floating Particles */}
-      <div className="absolute inset-0 z-0">
-        {[...Array(20)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-1 h-1 bg-accent rounded-full"
-            initial={{
-              x: Math.random() * window.innerWidth,
-              y: Math.random() * window.innerHeight,
-            }}
-            animate={{
-              y: [0, -30, 0],
-              opacity: [0.2, 0.8, 0.2],
-            }}
-            transition={{
-              duration: 3 + Math.random() * 2,
-              repeat: Infinity,
-              delay: Math.random() * 2,
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Content */}
-      <div className="relative z-10 text-center px-6 max-w-5xl mx-auto">
-        <motion.h2
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-xl md:text-2xl font-inter text-muted-foreground mb-4"
-        >
-          Hi, I'm Qasim Ali
-        </motion.h2>
-
-        <motion.h1
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
+      {/* Content Grid */}
+      <div className="relative z-10 max-w-7xl mx-auto px-6 w-full grid md:grid-cols-2 gap-12 items-center">
+        {/* Left: Giant Display Name */}
+        <motion.div
+          initial={{ opacity: 0, x: -40 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.32, delay: 0.2 }}
           onMouseEnter={() => setShowBackground(true)}
           onMouseLeave={() => setShowBackground(false)}
-          className="text-5xl md:text-7xl lg:text-8xl font-poppins font-bold text-foreground mb-6 cursor-hover transition-all duration-300"
+          className="cursor-hover"
         >
-          <span className="text-glow hover:scale-105 inline-block transition-transform">
-            UX/UI Designer
-          </span>
-        </motion.h1>
-
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="text-xl md:text-2xl font-inter text-muted-foreground mb-12 h-8"
-        >
-          <span className="inline-block">Crafting modern web experiences</span>
+          <motion.h1
+            className="font-bold leading-[0.85] tracking-tight text-[hsl(var(--text))]"
+            style={{ 
+              fontSize: 'clamp(3rem, 12vw, 10rem)',
+              fontFamily: 'Satoshi, sans-serif',
+              fontWeight: 700,
+            }}
+            animate={{
+              scale: showBackground ? 1.02 : 1,
+            }}
+            transition={{ duration: 0.22 }}
+          >
+            QASIM
+            {showBackground && (
+              <motion.span
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  textShadow: '0 0 2px hsl(var(--lime) / 0.4), inset 0 0 20px hsl(var(--lime) / 0.2)',
+                }}
+              />
+            )}
+          </motion.h1>
         </motion.div>
 
-        {/* CTA Buttons */}
+        {/* Right: Intro Content */}
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.8 }}
-          className="flex flex-col sm:flex-row gap-6 justify-center items-center"
+          initial={{ opacity: 0, x: 40 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.42, delay: 0.3 }}
+          className="space-y-6"
         >
-          <button
-            onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
-            className="relative px-8 py-4 bg-accent text-background font-poppins font-semibold rounded-lg overflow-hidden group cursor-hover shine-effect transition-all duration-300 hover:scale-105 glow-effect"
-            onMouseEnter={() => setShowBackground(true)}
-            onMouseLeave={() => setShowBackground(false)}
+          {/* Availability Badge */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.42, delay: 0.4 }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[hsl(var(--lime)/0.2)] bg-[hsl(var(--lime)/0.06)] backdrop-blur-sm"
           >
-            <span className="relative z-10">View My Work</span>
-          </button>
+            <motion.div
+              animate={{ scale: [1, 1.2, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="w-2 h-2 rounded-full bg-[hsl(var(--lime))]"
+              style={{
+                boxShadow: '0 0 8px hsl(var(--lime) / 0.8)',
+              }}
+            />
+            <span className="text-sm font-mono text-[hsl(var(--text))]">Available for projects</span>
+          </motion.div>
 
-          <button
-            onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-            className="relative px-8 py-4 border-2 border-accent text-accent font-poppins font-semibold rounded-lg overflow-hidden group cursor-hover transition-all duration-500 hover:bg-accent hover:text-background hover:scale-105"
-            onMouseEnter={() => setShowBackground(true)}
-            onMouseLeave={() => setShowBackground(false)}
+          {/* Headline */}
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.42, delay: 0.5 }}
+            className="text-4xl md:text-5xl font-semibold leading-tight text-[hsl(var(--text))]"
+            style={{ fontFamily: 'Satoshi, sans-serif' }}
           >
-            <span className="relative z-10">Get In Touch</span>
-          </button>
+            I design clear,{' '}
+            <span className="text-[hsl(var(--lime))] text-glow">
+              conversion-minded
+            </span>{' '}
+            interfaces.
+          </motion.h2>
+
+          {/* Subheading */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.42, delay: 0.6 }}
+            className="text-lg text-[hsl(var(--muted))] leading-relaxed"
+          >
+            Product and landing page design — strategy first, visuals second.
+          </motion.p>
+
+          {/* CTAs */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.42, delay: 0.7 }}
+            className="flex flex-wrap gap-4 pt-4"
+          >
+            <Button
+              variant="default"
+              size="lg"
+              onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
+              onMouseEnter={() => setShowBackground(true)}
+              onMouseLeave={() => setShowBackground(false)}
+              className="cursor-hover shine-sweep"
+            >
+              View Work
+            </Button>
+            <Button
+              variant="outline"
+              size="lg"
+              onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+              onMouseEnter={() => setShowBackground(true)}
+              onMouseLeave={() => setShowBackground(false)}
+              className="cursor-hover"
+            >
+              Let's Talk
+            </Button>
+          </motion.div>
         </motion.div>
       </div>
+
+      {/* Small Laptop Preview - Bottom Left */}
+      <motion.div
+        initial={{ opacity: 0, y: 40, rotate: 0 }}
+        animate={{ opacity: 1, y: 0, rotate: -8 }}
+        transition={{ duration: 0.8, delay: 1 }}
+        className="absolute bottom-12 left-12 w-64 h-40 rounded-xl border border-[hsl(var(--lime)/0.2)] bg-[hsl(var(--card))] overflow-hidden cursor-hover hidden lg:block"
+        style={{
+          boxShadow: '0 18px 44px rgba(0,0,0,0.6), 0 0 18px hsl(var(--lime) / 0.1)',
+        }}
+        whileHover={{ scale: 1.05, translateY: -6 }}
+      >
+        <div className="w-full h-full bg-gradient-to-br from-[hsl(var(--bg-2))] to-[hsl(var(--card))] flex items-center justify-center">
+          <span className="text-xs text-[hsl(var(--muted))] font-mono">Project Preview</span>
+        </div>
+      </motion.div>
 
       {/* Scroll Indicator */}
       <motion.div
@@ -117,8 +205,8 @@ const HeroSection = () => {
           transition={{ duration: 2, repeat: Infinity }}
           className="flex flex-col items-center gap-2"
         >
-          <span className="text-muted-foreground text-sm font-inter">Scroll</span>
-          <ChevronDown className="w-6 h-6 text-accent" />
+          <span className="text-[hsl(var(--muted))] text-xs font-mono">Scroll</span>
+          <ChevronDown className="w-5 h-5 text-[hsl(var(--lime))]" />
         </motion.div>
       </motion.div>
     </section>
